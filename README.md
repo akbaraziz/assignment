@@ -68,7 +68,7 @@ Open **Settings > Security > Secrets and variables > Actions**
 
    ![deploy_infra](images/github-action-params.jpg)
 
-- AWS region in which to deploy the infrastructure (Mandatory) : **default = eu-west-3**
+- AWS region in which to deploy the infrastructure (Mandatory) : **default = us-east-1**
 
 - Prefix name for resources to be created: s3 bucket, vpc, eks, ec2, etc : **default = eks** 
 
@@ -192,7 +192,7 @@ It is only possible to connect to the Kubernetes cluster APIs via the **ec2-bast
 
 ![delete_infra](images/delete_infra.png)
 
-- AWS region in which the infrastructure to delete is deployed : **default = eu-west-3** (the region where is deployed your AWS infra)
+- AWS region in which the infrastructure to delete is deployed : **default = us-east-1** (the region where is deployed your AWS infra)
 - Prefix name for resources to be delete: s3 bucket, vpc, eks, ec2, etc. : **default = eks** (prefix set during build stage) 
 
 

@@ -9,7 +9,7 @@ on:
       AWS_REGION:
         description: 'AWS region in which to deploy the infrastructure'
         required: true
-        default: 'eu-west-3'
+        default: 'us-east-1'
       NAME_PREFIX:
         description: 'Prefix name for resources to be created: s3 bucket, vpc, eks, ec2, etc.'
         required: true
@@ -32,7 +32,7 @@ on:
       PUBLIC_SSH_KEY:
         description: 'Public ssh key to connect to ec2-bastion host'
         required: true
-        default: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCzLnC7bnTFB8bEhWCUHh8B418rFwla7iJYclITd/59ZpZft3EdgeW9y/uLUfMH8f5P7be5j0NYLfD6jpou0VHdSkLymNJxaQDuvZBapW4jQI4luqRmN4xFeDIT+0BqT3sJotqU/n41NOGclEv/OMv6msulnC8A7wOBkrMJPzgNgs4a0+a8f/Slp9aAHpgKiWREwtFJDczFM0wUkQldEALg3QQt7qmpZgVx3KQi6u5YI0EqdjfMSP+qnY7Lk9yn2gQPPAR+NGgqz9d7bpsgqhggpw8k+Yw75bROdnk90Cc07zIg+lbBsyBoVNA+mRtejTC1IS9F1Pa+WdVtD3xpes7y0RCx6pxkTfLjB725FRs7EQ31lr031lC4fHB/bwfbU7QsCdHqrOJosKlNwG49qLc57LPS6qUKcJSCAjj3MZjTDNDuL8cxbdOy60fgI9n0YsDIY+5/YBItfsQStdJFzhLjsYN1oJx3HYF5ew+gngx8CzEGJ2s/fSpwducGMlFUcEjPAlVh94DpYubj06opOW1SM3w8U9BvUwC87uNhkI5Pn51kh7U2bOMJmxSnkl4RHmC6qj08HjCBQYaqzGEXstaoIExykTfHm3zFv4KiTMfH6fN5eaRpwvL3AYzAyAA6FbpXM2W8x35PM1lWgarrybg6iC3zYWDkjXlscD1Iu1uPYw== cley'
+        default: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDClXPdY5zEKdlNsmTVQL2mo7ilytQblt2r8M4qiULChbWCJj75ggTJUkrXcsSZbHzweaADAAlgnRURFVqNZOZrA/2eA4M85BVLHM6CGpQPO2Uh4M6D8dpSZAgSmqnNUlm0T0IpsZJ9Cb3KG1EhC8sAvV4wwqQGgJ45lwmhM36o+2yM9tgxaUfINTRFFcYP+/gY8gPAQpbgrCTvAF2n1VtqKoH5cnYEEEG0QpVTAtKeFRIkPltFRCmLnLbeX3okOrpcIxySh3tC+OobLypq8q+PQSWBrIMOVf1nHPopRKPSRehY9Qg+E+xDWUk172gekkuyGnlSwDO1yTbHFrvR3MfT3m4UxZIbI9AOr7QH0ONqTn447bbVfnnN0vH4nuP6dscRVOBe77xSk+6Wfmh6VmuEY+E1bH3aKtBWOzhGcN5wD1LT+x+9pbomthKUS21mF7tJrBNTBaXeGywOdBlcVE7pANR+riZHSwDXLEfLPOCNYY0vye1BL5TzI2eZKh+czKT2cU8Ry6DazuP8ZjTRuZ73Ae1UQpdjWJ3z26tFbkGJfFcNnqaIZGxJcEAM3jUXjVR28rH7O4uWWOFmn2ucdfPrHf8cZzi5FM9ndPRvoaWGkZYE+fZ91GvZHrrAJ00Ppqf0MRHAiqYUGw1r88w7qsEy2/y8KBiTtCF9bJiJ2fLKUQ== akbar@BAMF'
 
 jobs:
   deploy:

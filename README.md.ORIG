@@ -67,7 +67,7 @@ Open **Settings > Security > Secrets and variables > Actions**
 
 - AWS region in which to deploy the infrastructure (Mandatory) : **default = eu-west-3**
 
-- Prisma Cloud API URL (Mandatory) : **default = https://api2.eu.prismacloud.io**
+- Prisma Cloud API URL (Mandatory) : **default = https://api0.prismacloud.io**
 
 - Prefix name for resources to be created: s3 bucket, vpc, eks, ec2, etc : **default = eks** 
 
@@ -211,7 +211,7 @@ It is only possible to connect to the Kubernetes cluster APIs via the **ec2-bast
 
 ![delete_infra](images/delete_infra.png)
 
-- AWS region in which the infrastructure to delete is deployed : **default = eu-west-3** (the region where is deployed your AWS infra)
+- AWS region in which the infrastructure to delete is deployed : **default = us-east-1** (the region where is deployed your AWS infra)
 - Prefix name for resources to be delete: s3 bucket, vpc, eks, ec2, etc. : **default = eks** (prefix set during build stage) 
 
 

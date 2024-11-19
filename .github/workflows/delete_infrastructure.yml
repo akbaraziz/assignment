@@ -9,7 +9,7 @@ on:
       AWS_REGION:
         description: 'AWS region in which the infrastructure to delete is deployed'
         required: true
-        default: 'eu-west-3'
+        default: 'us-east-1'
       NAME_PREFIX:
         description: 'Prefix name for resources to be delete: s3 bucket, vpc, eks, ec2, etc.'
         required: true

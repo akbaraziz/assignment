@@ -3,13 +3,13 @@ pipeline{
     agent any
 
     environment{
-        AWS_DEFAULT_REGION="eu-west-3"
+        AWS_DEFAULT_REGION="us-east-1"
         SKIP="N"
         TERRADESTROY="Y"
         FIRST_DEPLOY="N"
-        STATE_BUCKET="cley-tfstate-bucket"
-        CLUSTER_NAME="cley-eks"
-        PRISMA_API_URL="https://api2.eu.prismacloud.io"
+        STATE_BUCKET="akbar-terraform-state"
+        CLUSTER_NAME="dev-eks"
+        PRISMA_API_URL="https://api0.prismacloud.io"
     }
 
     stages{
