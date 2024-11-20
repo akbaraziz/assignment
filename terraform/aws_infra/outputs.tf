@@ -49,3 +49,8 @@ output "mongodb_host" {
   description = "MongoDB host"
   value       = module.mongodb.mongodb_host
 }
+
+output "mongodb_sg_id" {
+  description = "MongoDB security group ID"
+  value       = aws_security_group.mongodb.id
+}

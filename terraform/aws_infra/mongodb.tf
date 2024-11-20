@@ -1,18 +1,15 @@
-#########
-# EC2 configuration
-
-resource "aws_key_pair" "bastion_ssh_key" {
+resource "aws_key_pair" "mongodb_ssh_key" {
   key_name   = local.sshkey_name
   public_key = "${var.public_ssh_key}"
 }
 
-resource "aws_instance" "bastion_instance" {
+resource "aws_instance" "mongodb_instance" {
 
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.medium"
   subnet_id              = module.vpc.public_subnets[0]
   private_ip             = "10.0.4.10"
-  vpc_security_group_ids = ["${aws_security_group.ec2-bastion.id}"]
+  vpc_security_group_ids = ["${aws_security_group.mongodb.id}"]
 
   associate_public_ip_address = true
 
@@ -36,6 +33,7 @@ resource "aws_instance" "bastion_instance" {
   ]
 
   tags = {
-    Name  = local.ec2_bastion_name
+    Name  = local.mongodb_name
   }
 }
+
