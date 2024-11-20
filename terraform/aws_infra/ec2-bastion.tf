@@ -14,7 +14,6 @@ resource "aws_instance" "ec2instance" {
   private_ip             = "10.0.4.10"
   vpc_security_group_ids = ["${aws_security_group.ec2-bastion.id}"]
 
-  #checkov:skip=CKV_AWS_88
   associate_public_ip_address = true
 
   key_name = "${aws_key_pair.ssh_key.key_name}"

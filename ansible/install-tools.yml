@@ -20,9 +20,24 @@
 
     - name: Install aws-cli
       ansible.builtin.command: sudo snap install aws-cli --classic
-  
-    - name: Download kubectl v1.31.1
-      ansible.builtin.command: sudo curl -LO "https://dl.k8s.io/release/v1.31.1/bin/linux/amd64/kubectl" 
+
+    - name: Install MongoDB Pre-Requisites
+      ansible.builtin.command: sudo apt-get install gnupg curl -y
+
+    - name: Install MongoDB Public GPG Key
+      ansible.builtin.command: curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
+
+    - name: Create MongoDB List File
+      ansible.builtin.command: echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+
+    - name: Update Repo
+      ansible.builtin.command: sudo apt-get update
+
+    - name: Install MongoDB Community Edition
+      ansible.builtin.command: sudo apt-get install -y mongodb-org -y && sudo systemctl start mongod && sudo systemctl enable mongod
+
+    - name: Download kubectl Latest Version
+      ansible.builtin.command: sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
     - name: Install kubectl
       ansible.builtin.command: sudo mv kubectl /usr/local/bin/kubectl
@@ -58,5 +73,14 @@
     - name: Set Kubeconfig for cluster 
       ansible.builtin.command: 
         cmd: aws eks update-kubeconfig --name "{{ EKS_CLUSTER_NAME }}"
+
+    - name: Copy backup.sh to target machine
+      ansible.builtin.copy:
+        src: ./scripts/backup.sh
+        dest: /tmp/backup.sh
+        mode: '0755'
+
+    - name: Install backup script on target machine
+      ansible.builtin.command: sudo /tmp/backup.sh 2>&1 | tee /tmp/backup.log
 
 
