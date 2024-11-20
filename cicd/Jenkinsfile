@@ -7,7 +7,7 @@ pipeline{
         SKIP="N"
         TERRADESTROY="Y"
         FIRST_DEPLOY="N"
-        STATE_BUCKET="akbar-terraform-state"
+        STATE_BUCKET="akbar-tfstate-bucket"
         CLUSTER_NAME="dev-eks"
         PRISMA_API_URL="https://api0.prismacloud.io"
     }

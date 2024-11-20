@@ -7,7 +7,7 @@ variable "region" {
 variable "name_prefix" {
   description = "Objects name prefix to use for deployment"
   type        = string
-  default     = "dev"
+  default     = "eks"
 }
 
 variable "actor" {

@@ -11,7 +11,7 @@ on:
         required: true
         default: 'us-east-1'
       NAME_PREFIX:
-        description: 'Prefix name for resources to be created: s3 bucket, vpc, eks, ec2, etc.'
+        description: 'Prefix name for resources to be created: s3 bucket, vpc, eks, ec2, lab, dev, etc.'
         required: true
         default: 'eks'
       WORKER_NODES_NUMBER:
