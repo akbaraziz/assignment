@@ -7,6 +7,8 @@ on:
   push:
     paths:
       - deploy_infrastructure.yml
+    paths-ignore:
+      - deploy_app.yml
   workflow_dispatch:
     inputs:
       AWS_REGION:
@@ -114,9 +116,7 @@ jobs:
       - name: set env from tf_output
         id: tf_output
         run: |
-          echo "EKS_CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $GITHUB_ENV
-          echo "ECR_REPOSITORY_NAME=$(terraform output -raw ecr_repository_name)" >> $GITHUB_ENV
-          echo "MONGODB_HOST=$(terraform output -raw mongodb_host)" >> $GITHUB_ENV
+          echo "EKS_CLUSTER_NAME=$(terraform output cluster_name)" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -157,82 +157,3 @@ jobs:
             --extra-vars AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             --extra-vars AWS_DEFAULT_REGION=${{ github.event.inputs.AWS_REGION }}
             --extra-vars EKS_CLUSTER_NAME=${{ env.EKS_CLUSTER_NAME }}
-  build-and-deploy:
-    needs: deploy
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-role
-          aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build and test application
-        run: |
-          npm ci
-          npm run build
-          npm run test
-
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.get_ecr_output.outputs.ecr_repository_name }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t $ECR_REGISTRY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-
-          - name: Validate Secrets
-          run: |
-            [[ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]] || exit 1
-            [[ -n "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]] || exit 1
-      
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name $(terraform output cluster_name)
-
-      - name: Deploy to EKS
-        env:
-          ECR_REGISTRY: $(terraform output ecr_repository_name)
-          IMAGE_TAG: ${{ github.sha }}
-          MONGODB_HOST: $(terraform output mongodb_host)
-        run: |
-          # Create MongoDB secrets
-          kubectl get secret mongodb-secret --ignore-not-found || \
-          kubectl create secret generic mongodb-secret \
-            --from-literal=host=$MONGODB_HOST \
-            --from-literal=username=${{ secrets.MONGODB_USERNAME }} \
-            --from-literal=password=${{ secrets.MONGODB_PASSWORD }} \
-            --dry-run=client -o yaml | kubectl apply -f -
-
-          # Update deployment manifest with dynamic values
-          cat k8s/deployment.yml | \
-          sed "s|\${AWS_ACCOUNT_ID}|${ECR_REGISTRY}:${IMAGE_TAG}|g" | \
-          kubectl apply -f -
-          
-          kubectl apply -f k8s/service.yml
-          kubectl apply -f k8s/ingress.yml
-
-      - name: Verify deployment
-        run: |
-          kubectl rollout status deployment/task-management-frontend --timeout=300s
-
-      - name: Clean up
-        if: always()
-        run: |
-          kubectl delete secret mongodb-secret --ignore-not-found
-          docker logout $(terraform output ecr_repository_name)            

@@ -2,13 +2,13 @@
 
 Deploy EKS with Terraform
 
-[![Deploy Infrastructure](https://github.com/cleypanw/terraform-aws-eks/actions/workflows/deploy_infrastructure.yml/badge.svg?branch=main)](https://github.com/cleypanw/terraform-aws-eks/actions/workflows/deploy_infrastructure.yml)
+[![Deploy Infrastructure](https://github.com/akbaraziz/assignment/actions/workflows/deploy_infrastructure.yml/badge.svg?branch=main)](https://github.com/akbaraziz/assignment/actions/workflows/deploy_infrastructure.yml)
 
 
 
 ### Purpose
 
-This repository provides a lab to show deployment of an EKS cluster and its associated infrastructure  (VPC, SG, S3, etc.) in an automated way with GitHub Action.
+This repository provides a deployment of an EKS cluster and its associated infrastructure  (VPC, SG, S3, etc.) in an automated way with GitHub Action.
 
 It is possible to use this code to quickly deploy a cloud native environment (K8s) for demonstration purposes.
 
@@ -35,14 +35,6 @@ It is possible to use this code to quickly deploy a cloud native environment (K8
 - **SSH Key**
 
 
-
-#### Create a fork of the repository
-
-1. Login with your github account
-2. Open https://github.com/cleypanw/terraform-aws-eks and click on Fork
-
-
-
 #### Configure GitHub Action Secrets
 
 Open **Settings > Security > Secrets and variables > Actions** 
@@ -50,7 +42,7 @@ Open **Settings > Security > Secrets and variables > Actions**
 - <u>**Secrets**</u>
   - **AWS_ACCESS_KEY_ID** 
   - **AWS_SECRET_ACCESS_KEY**
-  - **SSH_PRIVATE_KEY** (Private key yes, will be used by ansible to connect to bastion instance to install tools)
+  - **SSH_PRIVATE_KEY** (Private key yes, will be used by Ansible to connect to bastion instance to install tools)
 
 
 
@@ -70,7 +62,7 @@ Open **Settings > Security > Secrets and variables > Actions**
 
 - AWS region in which to deploy the infrastructure (Mandatory) : **default = us-east-1**
 
-- Prefix name for resources to be created: s3 bucket, vpc, eks, ec2, etc : **default = eks** 
+- Prefix name for resources to be created: s3 bucket, vpc, eks, ec2, dev, lab, etc : **default = eks** 
 
   *(all AWS resources created will be prefix, don't worry if you already have resources with this prefix, a random character string is also generated as a suffix,  under the hood in the code, so each deployment will have a unique name, even if the same prefix is used several time)*
 
@@ -90,7 +82,7 @@ Open **Settings > Security > Secrets and variables > Actions**
 
 
 
-*NB: click on the stage to have details* ie ansible stage below ![ansible](images/ansible.jpg)
+*NB: click on the stage to have details* ie Ansible stage below ![ansible](images/ansible.jpg)
 
 
 
@@ -176,7 +168,7 @@ It is only possible to connect to the Kubernetes cluster APIs via the **ec2-bast
 
 ![chrisley-weather-app](images/chrisley-weather-app.png)
 
-🎉 **Congratulations your EKS Cluster is fully functionnal.** 🎉
+🎉 **Congratulations your EKS Cluster is fully functional.** 🎉
 
 
 
