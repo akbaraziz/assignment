@@ -39,3 +39,13 @@ output "load_balancer_role_arn" {
   description = "ARN of the IAM role for ALB Ingress Controller"
   value       = module.lb_role.iam_role_arn
 }
+
+output "ecr_repository_name" {
+  description = "Name of the ECR repository"
+  value       = aws_ecr_repository.app.repository_name
+}
+
+output "mongodb_host" {
+  description = "MongoDB host"
+  value       = module.mongodb.mongodb_host
+}
