@@ -1,4 +1,3 @@
-
 - name: "Install and configure awscli, kubectl, create ns and deploy defender"
   hosts: "{{ target | default('nothing') }}"
   environment:
@@ -10,20 +9,30 @@
     ansible_user: ubuntu
   become: true
   tasks:
-    - name: Update Repo
-      ansible.builtin.command: sudo apt-get update
+    - name: Update apt repository
+      ansible.builtin.command:
+        cmd: sudo apt-get update
+      changed_when: false
 
     - name: Install python3-pip
-      ansible.builtin.command: sudo apt install python3-pip -y
+      ansible.builtin.command:
+        cmd: sudo apt install python3-pip -y
+      changed_when: false
 
     - name: Install jq
-      ansible.builtin.command: sudo snap install jq 
+      ansible.builtin.command:
+        cmd: sudo apt-get install -y jq
+      changed_when: false
 
     - name: Install aws-cli
-      ansible.builtin.command: sudo snap install aws-cli --classic
+      ansible.builtin.command:
+        cmd: sudo apt-get install -y awscli
+      changed_when: false
 
     - name: Install MongoDB Pre-Requisites
-      ansible.builtin.command: sudo apt-get install gnupg curl -y
+      ansible.builtin.command:
+        cmd: sudo apt-get install gnupg curl -y
+      changed_when: false
 
     - name: Download MongoDB Public GPG Key
       ansible.builtin.command:
@@ -38,28 +47,40 @@
       ansible.builtin.command:
         cmd: echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
       changed_when: false
-      
-    - name: Update Repo
-      ansible.builtin.command: sudo apt-get update
 
-    - name: Install MongoDB Community Edition
-      ansible.builtin.command: sudo apt-get install -y mongodb-org -y && sudo systemctl start mongod && sudo systemctl enable mongod
+    - name: Validate MongoDB Repository
+      ansible.builtin.command: sudo apt-get update
+      changed_when: false
+
+    - name: Retry MongoDB Installation
+      ansible.builtin.shell: |
+        sudo apt-get install -y mongodb-org && \
+        sudo systemctl start mongod && \
+        sudo systemctl enable mongod
+      args:
+        warn: false
+      retries: 5
+      delay: 10
 
     - name: Download kubectl Latest Version
-      ansible.builtin.command: sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      ansible.builtin.command:
+        cmd: sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      changed_when: false
 
     - name: Install kubectl
-      ansible.builtin.command: sudo mv kubectl /usr/local/bin/kubectl
-    
-    - name: chmod kubectl
-      ansible.builtin.command: sudo chmod 0755 /usr/local/bin/kubectl
+      ansible.builtin.command:
+        cmd: sudo mv kubectl /usr/local/bin/kubectl
 
-    - name: install pre-requisites pip3, kub, oc
+    - name: Set permissions for kubectl
+      ansible.builtin.command:
+        cmd: sudo chmod 0755 /usr/local/bin/kubectl
+
+    - name: Install pre-requisites with pip3
       pip:
         name:
           - openshift
           - pyyaml
-          - kubernetes 
+          - kubernetes
 
     - name: Create AWS directory if it does not exist
       ansible.builtin.file:
@@ -69,7 +90,7 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
 
-    - name: Set AWS Creds
+    - name: Set AWS Credentials
       template:
         src: templates/credentials.j2
         dest: .aws/credentials
@@ -79,8 +100,8 @@
         src: templates/config.j2
         dest: .aws/config
 
-    - name: Set Kubeconfig for cluster 
-      ansible.builtin.command: 
+    - name: Set Kubeconfig for cluster
+      ansible.builtin.command:
         cmd: aws eks update-kubeconfig --name "{{ EKS_CLUSTER_NAME }}"
 
     - name: Copy backup.sh to target machine
@@ -90,6 +111,5 @@
         mode: '0755'
 
     - name: Install backup script on target machine
-      ansible.builtin.command: sudo /tmp/backup.sh 2>&1 | tee /tmp/backup.log
-
-
+      ansible.builtin.command:
+        cmd: sudo /tmp/backup.sh 2>&1 | tee /tmp/backup.log
