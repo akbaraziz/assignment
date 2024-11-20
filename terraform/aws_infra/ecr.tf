@@ -4,7 +4,7 @@
 resource "aws_ecr_repository" "ecr" {
   # checkov:skip=BC_AWS_GENERAL_24: Scan using Prisma Cloud
   name                 = local.ecr_name
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
   image_scanning_configuration {
     scan_on_push = true # Useful to compare findings
   }

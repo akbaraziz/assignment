@@ -45,32 +45,8 @@ locals {
   sshkey_name       = "${var.name_prefix}-sshkey-${random_string.suffix.result}"
   sg_name           = "${var.name_prefix}-sg-${random_string.suffix.result}"
   ecr_name          = "${var.name_prefix}-ecr-${random_string.suffix.result}"
-  mongodb_name      = "${var.name_prefix}-mongodb-${random_string.suffix.result}"
 }
 
-# AWS ECR Repository
-resource "aws_ecr_repository" "app" {
-  name = local.ecr_name
-}
 
-# EC2 Bastion Instance
-resource "aws_instance" "ec2instance-bastion" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro" # Example instance type
-  key_name      = local.sshkey_name
 
-  tags = {
-    Name = local.ec2_bastion_name
-  }
-}
 
-# MongoDB EC2 Instance
-resource "aws_instance" "ec2instance-mongodb" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.small" # Example instance type
-  key_name      = local.sshkey_name
-
-  tags = {
-    Name = local.mongodb_name
-  }
-}

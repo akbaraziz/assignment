@@ -29,28 +29,3 @@ output "ec2instance_dns" {
 output "ecr_registry_url" {
   value = aws_ecr_repository.ecr.repository_url
 }
-
-output "ecr_repository_url" {
-  description = "URL of the ECR repository"
-  value       = aws_ecr_repository.app.repository_url
-}
-
-output "load_balancer_role_arn" {
-  description = "ARN of the IAM role for ALB Ingress Controller"
-  value       = module.lb_role.iam_role_arn
-}
-
-output "ecr_repository_name" {
-  description = "Name of the ECR repository"
-  value       = aws_ecr_repository.app.repository_name
-}
-
-output "mongodb_host" {
-  description = "MongoDB host"
-  value       = module.mongodb.mongodb_host
-}
-
-output "mongodb_sg_id" {
-  description = "MongoDB security group ID"
-  value       = aws_security_group.mongodb.id
-}

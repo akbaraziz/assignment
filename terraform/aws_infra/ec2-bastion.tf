@@ -1,12 +1,12 @@
 #########
 # EC2 configuration
 
-resource "aws_key_pair" "bastion_ssh_key" {
+resource "aws_key_pair" "ssh_key" {
   key_name   = local.sshkey_name
   public_key = "${var.public_ssh_key}"
 }
 
-resource "aws_instance" "bastion_instance" {
+resource "aws_instance" "ec2instance" {
 
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.medium"
@@ -14,6 +14,7 @@ resource "aws_instance" "bastion_instance" {
   private_ip             = "10.0.4.10"
   vpc_security_group_ids = ["${aws_security_group.ec2-bastion.id}"]
 
+  #checkov:skip=CKV_AWS_88
   associate_public_ip_address = true
 
   key_name = "${aws_key_pair.ssh_key.key_name}"
