@@ -83,7 +83,7 @@ jobs:
           # Optional, additional flags to pass to ansible-playbook
           options: |
             --inventory ansible_inventory.ini
-            --extra-vars target="dev-mongodb"
+            --extra-vars target="ec2-bastion-public"
             --extra-vars AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             --extra-vars AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             --extra-vars AWS_DEFAULT_REGION=${{ github.event.inputs.AWS_REGION }}
