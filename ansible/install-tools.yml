@@ -52,16 +52,6 @@
       ansible.builtin.command: sudo apt-get update
       changed_when: false
 
-    - name: Retry MongoDB Installation
-      ansible.builtin.shell: |
-        sudo apt-get install -y mongodb-org && \
-        sudo systemctl start mongod && \
-        sudo systemctl enable mongod
-      args:
-        warn: false
-      retries: 5
-      delay: 10
-
     - name: Download kubectl Latest Version
       ansible.builtin.command:
         cmd: sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
