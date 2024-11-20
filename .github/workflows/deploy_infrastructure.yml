@@ -157,8 +157,7 @@ jobs:
             --extra-vars AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             --extra-vars AWS_DEFAULT_REGION=${{ github.event.inputs.AWS_REGION }}
             --extra-vars EKS_CLUSTER_NAME=${{ env.EKS_CLUSTER_NAME }}
-
- build-and-deploy:
+  build-and-deploy:
     needs: deploy
     runs-on: ubuntu-latest
     
