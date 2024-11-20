@@ -1,3 +1,4 @@
+
 - name: "Install and configure awscli, kubectl, create ns and deploy defender"
   hosts: "{{ target | default('nothing') }}"
   environment:
@@ -24,12 +25,20 @@
     - name: Install MongoDB Pre-Requisites
       ansible.builtin.command: sudo apt-get install gnupg curl -y
 
-    - name: Install MongoDB Public GPG Key
-      ansible.builtin.command: sudo curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
+    - name: Download MongoDB Public GPG Key
+      ansible.builtin.command:
+        cmd: curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc -o /tmp/server-8.0.asc
+      changed_when: false
+
+    - name: Convert MongoDB GPG Key to armored format
+      ansible.builtin.command:
+        cmd: gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor /tmp/server-8.0.asc
 
     - name: Create MongoDB List File
-      ansible.builtin.command: echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-
+      ansible.builtin.command:
+        cmd: echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+      changed_when: false
+      
     - name: Update Repo
       ansible.builtin.command: sudo apt-get update
 
