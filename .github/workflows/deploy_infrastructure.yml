@@ -4,11 +4,6 @@ on:
   # push:
   #  branches:
   #    - main
-  push:
-    paths:
-      - deploy_infrastructure.yml
-    paths-ignore:
-      - deploy_app.yml
   workflow_dispatch:
     inputs:
       AWS_REGION:
